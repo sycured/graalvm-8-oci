@@ -1,4 +1,5 @@
 FROM container-registry.oracle.com/os/oraclelinux:8-slim
+LABEL org.opencontainers.image.authors="sycured" org.opencontainers.image.source="https://github.com/sycured/graalvm-8-oci"
 
 ARG GRAALVM_YEAR_VERSION=21
 ARG GRAALVM_MAJOR_VERSION=2
@@ -18,6 +19,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle\n\
 gpgcheck=1\n\
 enabled=1\
 " > /etc/yum.repos.d/ol8_graalvm_community.repo \
+    && microdnf upgrade -y \
     && microdnf --enablerepo ol8_codeready_builder install -y graalvm${GRAALVM_YEAR_VERSION}-ce-${JAVA_VERSION}-native-image-${GRAALVM_VERSION} \
     && rm -rf /var/cache/yum
 
