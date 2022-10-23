@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8-minimal
+FROM container-registry.oracle.com/os/oraclelinux:9-slim
 LABEL org.opencontainers.image.authors="sycured" org.opencontainers.image.source="https://github.com/sycured/graalvm-8-oci"
 
 ARG GRAALVM_YEAR_VERSION=21
@@ -16,13 +16,12 @@ RUN echo -e "\
 name=Oracle Linux 8 graalvm community (\$basearch)\n\
 baseurl=https://yum.oracle.com/repo/OracleLinux/OL8/graalvm/community/\$basearch\n\
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle\n\
-gpgcheck=1\n\
+gpgcheck=0\n\
 enabled=1\
 " > /etc/yum.repos.d/ol8_graalvm_community.repo \
-    && curl -s -o /etc/pki/rpm-gpg/RPM-GPG-KEY-oracle https://public-yum.oracle.com/RPM-GPG-KEY-oracle-ol8 \
     && microdnf upgrade -y \
     && microdnf install -y graalvm${GRAALVM_YEAR_VERSION}-ce-${JAVA_VERSION}-nodejs-devel-${GRAALVM_VERSION} \
-    && rm -rf /var/cache/yum \
+    && rm -rf /var/cache/yum/* \
     && ln -s /usr/lib64/graalvm/graalvm${GRAALVM_YEAR_VERSION}-ce-java${JAVA_VERSION}/bin/node /usr/local/bin/node \
     && ln -s /usr/lib64/graalvm/graalvm${GRAALVM_YEAR_VERSION}-ce-java${JAVA_VERSION}/bin/npm /usr/local/bin/npm \
     && ln -s /usr/lib64/graalvm/graalvm${GRAALVM_YEAR_VERSION}-ce-java${JAVA_VERSION}/bin/npx /usr/local/bin/npx
